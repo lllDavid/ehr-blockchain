@@ -24,7 +24,7 @@ public class PatientController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/patients")
+    @PostMapping
     public ResponseEntity<Patient> addPatient(@RequestBody Patient patient) {
         Patient savedPatient = patientService.savePatientWithHealthRecord(patient);
         return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);

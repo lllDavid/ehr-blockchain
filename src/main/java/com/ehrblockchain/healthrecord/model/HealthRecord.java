@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import com.ehrblockchain.patient.model.Patient;
@@ -33,43 +34,56 @@ public class HealthRecord {
     @Column(name = "record_date", nullable = false)
     private LocalDate recordDate;
 
-    @Column(name = "notes", length = 2000)
-    private String notes;
+    @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Note> notes = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Diagnosis> diagnoses = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<TreatmentPlan> treatmentPlans = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Prescription> prescriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Vitals> vitals = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<CBC> cbcTests = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Allergy> allergies = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<LabResult> labResults = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Immunization> immunizations = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<MedicalHistory> medicalHistory = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<FamilyHistory> familyHistory = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Encounter> encounters = new ArrayList<>();
 
     @OneToMany(mappedBy = "healthRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Procedure> procedures = new ArrayList<>();
 
     public HealthRecord() {
@@ -80,7 +94,7 @@ public class HealthRecord {
                         List<TreatmentPlan> treatmentPlans,
                         List<Prescription> prescriptions,
                         List<Allergy> allergies,
-                        String notes,
+                        List<Note> notes,
                         List<LabResult> labResults,
                         List<Vitals> vitals,
                         List<CBC> cbcTests,
@@ -138,7 +152,7 @@ public class HealthRecord {
         return cbcTests;
     }
 
-    public String getNotes() {
+    public List<Note> getNotes() {
         return notes;
     }
 
@@ -206,7 +220,7 @@ public class HealthRecord {
         this.cbcTests = cbcTests;
     }
 
-    public void setNotes(String notes) {
+    public void setNotes(List<Note> notes) {
         this.notes = notes;
     }
 
@@ -236,6 +250,10 @@ public class HealthRecord {
 
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
+    }
+
+    public void updateFrom(HealthRecord updatedRecord) {
+        // Implement
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ehrblockchain.healthrecord.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class TreatmentPlan {
     private String notes;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "health_record_id", nullable = false)
     private HealthRecord healthRecord;
 

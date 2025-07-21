@@ -19,7 +19,6 @@ public class Patient {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "ehr_id", referencedColumnName = "id")
-    @JsonIgnore
     private HealthRecord healthRecord;
 
     @Column(name = "first_name")

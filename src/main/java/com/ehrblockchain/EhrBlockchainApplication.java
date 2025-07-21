@@ -3,6 +3,7 @@ package com.ehrblockchain;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.ehrblockchain.healthrecord.service.HealthRecordService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -136,14 +137,20 @@ public class EhrBlockchainApplication {
         cbc.setPlateletCount(250000);
         cbc.setHealthRecord(healthRecord);
 
+        Note note = new Note();
+        note.setContent("Focus on lower back pain");
+        note.setHealthRecord(healthRecord);
+
+
         // ---------- Aggregate all health data into HealthRecord ----------
         healthRecord.setDiagnoses(List.of(diagnosis));
         healthRecord.setTreatmentPlans(List.of(treatmentPlan));
         healthRecord.setPrescriptions(List.of(prescription));
         healthRecord.setAllergies(List.of(allergy));
-        healthRecord.setNotes("Initial record");
+        healthRecord.setNotes(List.of(note));
         healthRecord.setLabResults(List.of(labResult));
         healthRecord.setVitals(List.of(vitals));
+        healthRecord.setCbcTests(List.of(cbc));
         healthRecord.setImmunizations(List.of(immunization));
         healthRecord.setMedicalHistory(List.of(medicalHistory));
         healthRecord.setFamilyHistory(List.of(familyHistory));
@@ -163,8 +170,8 @@ public class EhrBlockchainApplication {
         System.out.println("! GetAllPatients: " + patientService.getAllPatients());
         System.out.println("! GetHealthRecord: " + patient.getHealthRecord());
 
+
         // ---------- Update patient ----------
-        System.out.println("Entering Update Functions");
         Long patientId = patient.getId();
         Patient updatedPatient = new Patient();
         updatedPatient.setFirstName("Daniel");
@@ -174,5 +181,6 @@ public class EhrBlockchainApplication {
 
         // ---------- Delete patient ----------
         // patientService.deletePatientById(patient.getId());
+
     }
 }
