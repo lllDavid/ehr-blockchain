@@ -1,11 +1,14 @@
 package com.ehrblockchain.patient.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ehrblockchain.patient.model.Patient;
 import com.ehrblockchain.patient.service.PatientService;
+import com.ehrblockchain.patient.dto.PatientUpdateDTO;
 
 @RestController
 @RequestMapping("/patients")
@@ -15,6 +18,11 @@ public class PatientController {
 
     public PatientController(PatientService patientService) {
         this.patientService = patientService;
+    }
+
+    @GetMapping
+    public List<Patient> getAllPatients() {
+        return patientService.getAllPatients();
     }
 
     @GetMapping("/{id}")
@@ -30,15 +38,11 @@ public class PatientController {
         return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
     }
 
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody Patient updatedPatient) {
-        try {
-            Patient updated = patientService.updatePatient(id, updatedPatient);
-            return ResponseEntity.ok(updated);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PatchMapping("/{id}")
+    public ResponseEntity<Patient> updatePatient(@PathVariable Long id,
+                                                 @RequestBody PatientUpdateDTO updateDTO) {
+        Patient updatedPatient = patientService.updatePatient(id, updateDTO);
+        return ResponseEntity.ok(updatedPatient);
     }
 
     @DeleteMapping("/{id}")

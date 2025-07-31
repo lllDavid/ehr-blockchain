@@ -3,7 +3,6 @@ package com.ehrblockchain;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.ehrblockchain.healthrecord.service.HealthRecordService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -47,7 +46,7 @@ public class EhrBlockchainApplication {
         patient.setHeight(180.00);
         patient.setWeight(80.00);
         patient.setPhoneNumber("555-123-4567");
-        patient.setEmail("robert.jensen3@gmail.com");
+        patient.setEmail("robert.jensen3447@gmail.com");
         patient.setEmergencyContact("Sarah Jensen");
         patient.setAddress(address);
         patient.setInsurance(insurance);
@@ -169,18 +168,6 @@ public class EhrBlockchainApplication {
         System.out.println("! GetByEmail: " + patientService.getPatientByEmail(patient.getEmail()));
         System.out.println("! GetAllPatients: " + patientService.getAllPatients());
         System.out.println("! GetHealthRecord: " + patient.getHealthRecord());
-
-
-        // ---------- Update patient ----------
-        Long patientId = patient.getId();
-        Patient updatedPatient = new Patient();
-        updatedPatient.setFirstName("Daniel");
-        updatedPatient.setLastName("Johnson");
-        Patient updated = patientService.updatePatient(patientId, updatedPatient);
-        System.out.println("Updated: " + updated);
-
-        // ---------- Delete patient ----------
-        // patientService.deletePatientById(patient.getId());
 
     }
 }
