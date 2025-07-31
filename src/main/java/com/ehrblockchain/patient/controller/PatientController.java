@@ -2,6 +2,7 @@ package com.ehrblockchain.patient.controller;
 
 import java.util.List;
 
+import com.ehrblockchain.patient.dto.PatientCreateDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +34,8 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<Patient> addPatient(@RequestBody Patient patient) {
-        Patient savedPatient = patientService.savePatientWithHealthRecord(patient);
+    public ResponseEntity<Patient> createPatient(@RequestBody PatientCreateDTO patientCreateDTO) {
+        Patient savedPatient = patientService.createPatient(patientCreateDTO);
         return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
     }
 

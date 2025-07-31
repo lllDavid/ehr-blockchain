@@ -3,7 +3,6 @@ package com.ehrblockchain.patient.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.ehrblockchain.patient.mapper.PatientMapper;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
@@ -14,6 +13,9 @@ import com.ehrblockchain.patient.model.Address;
 import com.ehrblockchain.patient.model.Insurance;
 import com.ehrblockchain.patient.model.Patient;
 import com.ehrblockchain.patient.repository.PatientRepository;
+import com.ehrblockchain.patient.dto.PatientCreateDTO;
+import com.ehrblockchain.patient.mapper.PatientMapper;
+
 
 @Service
 public class PatientService {
@@ -27,11 +29,17 @@ public class PatientService {
     }
 
     @Transactional
-    public Patient savePatientWithHealthRecord(Patient patient) {
+    public Patient savePatient(Patient patient) {
         patientRepository.findByEmail(patient.getEmail()).ifPresent(p -> {
             throw new RuntimeException("Email already exists");
         });
         return patientRepository.save(patient);
+    }
+
+    @Transactional
+    public Patient createPatient(PatientCreateDTO dto) {
+        Patient patient = patientMapper.toEntity(dto);
+        return savePatient(patient);
     }
 
     @Transactional
