@@ -16,7 +16,7 @@ public class Patient {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "ehr_id", referencedColumnName = "id")
     private HealthRecord healthRecord;
 
