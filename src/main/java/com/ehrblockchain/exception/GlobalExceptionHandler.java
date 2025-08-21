@@ -41,10 +41,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleJsonParseError(HttpMessageNotReadableException ex) {
         return ResponseEntity.badRequest().body("Invalid request payload");
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAllExceptions(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred.");
-    }
 }
