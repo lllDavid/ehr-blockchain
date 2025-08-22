@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.ehrblockchain.security.role.RoleEnum;
+
 @Entity
 @Table(name = "roles")
 public class Role {

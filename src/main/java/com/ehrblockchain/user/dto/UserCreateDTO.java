@@ -6,7 +6,7 @@ public class UserCreateDTO {
     private String lastName;
     private String email;
     private String password;
-    private Long roleId;
+    private Integer roleId;
 
     public String getFirstName() {
         return firstName;
@@ -40,11 +40,11 @@ public class UserCreateDTO {
         this.password = password;
     }
 
-    public Long getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Long roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 }

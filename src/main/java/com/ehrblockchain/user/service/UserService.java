@@ -14,16 +14,20 @@ import com.ehrblockchain.user.repository.UserRepository;
 import com.ehrblockchain.user.dto.UserCreateDTO;
 import com.ehrblockchain.user.dto.UserDTO;
 import com.ehrblockchain.user.dto.UserUpdateDTO;
+import com.ehrblockchain.security.role.model.Role;
+import com.ehrblockchain.security.role.repository.RoleRepository;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.roleRepository = roleRepository;
     }
 
     @Transactional
@@ -39,6 +43,9 @@ public class UserService {
     @Transactional
     public UserDTO createUser(UserCreateDTO createDTO) {
         User user = userMapper.toEntity(createDTO);
+        Role role = roleRepository.findById(createDTO.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Role not found: " + createDTO.getRoleId()));
+        user.setRole(role);
         return saveUser(user);
     }
 

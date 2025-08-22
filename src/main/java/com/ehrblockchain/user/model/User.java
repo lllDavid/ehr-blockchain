@@ -2,7 +2,6 @@ package com.ehrblockchain.user.model;
 
 import java.time.LocalDateTime;
 
-import com.ehrblockchain.user.role.Role;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.Email;
@@ -13,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.ehrblockchain.patient.model.Patient;
+import com.ehrblockchain.security.role.model.Role;
 
 @Entity
 @Table(name = "users")
