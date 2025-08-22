@@ -1,12 +1,17 @@
 package com.ehrblockchain.patient.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.*;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.ehrblockchain.healthrecord.model.HealthRecord;
+import com.ehrblockchain.user.model.User;
 
 @Entity
 @Table(name = "patients",
@@ -21,6 +26,17 @@ public class Patient {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "ehr_id", referencedColumnName = "id")
     private HealthRecord healthRecord;
+
+    @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
+    private User user;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Size(max = 50)
     @Column(name = "first_name")
@@ -207,10 +223,26 @@ public class Patient {
         this.bloodType = bloodType;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "Patient{" +
-                ", firstName='" + firstName + '\'' +
+                "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", gender='" + gender + '\'' +
@@ -222,6 +254,8 @@ public class Patient {
                 ", address=" + address +
                 ", insurance=" + insurance +
                 ", bloodType='" + bloodType + '\'' +
+                ", createdAt=" + (createdAt != null ? createdAt.toString() : null) +
+                ", updatedAt=" + (updatedAt != null ? updatedAt.toString() : null) +
                 '}';
     }
 }

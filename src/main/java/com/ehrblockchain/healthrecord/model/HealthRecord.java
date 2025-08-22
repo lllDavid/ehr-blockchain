@@ -281,7 +281,7 @@ public class HealthRecord {
     @Override
     public String toString() {
         return "HealthRecord{" +
-                ", patientId=" + (patient != null ? patient.getId() : null) +
+                "patientId=" + (patient != null ? patient.getId() : null) +
                 ", recordDate=" + recordDate +
                 ", diagnoses=" + diagnoses +
                 ", treatmentPlans=" + treatmentPlans +
