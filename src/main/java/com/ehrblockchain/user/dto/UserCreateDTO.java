@@ -1,12 +1,14 @@
 package com.ehrblockchain.user.dto;
 
+import com.ehrblockchain.security.role.RoleEnum;
+
 public class UserCreateDTO {
 
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    private Integer roleId;
+    private RoleEnum roleName;
 
     public String getFirstName() {
         return firstName;
@@ -40,11 +42,11 @@ public class UserCreateDTO {
         this.password = password;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public RoleEnum getRoleName() {
+        return roleName;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public void setRoleName(RoleEnum roleName) {
+        this.roleName = roleName;
     }
 }

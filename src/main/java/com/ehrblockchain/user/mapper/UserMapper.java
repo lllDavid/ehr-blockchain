@@ -1,9 +1,6 @@
 package com.ehrblockchain.user.mapper;
 
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 import com.ehrblockchain.user.model.User;
 import com.ehrblockchain.user.dto.UserCreateDTO;
@@ -18,6 +15,7 @@ public interface UserMapper {
 
     User toEntity(UserCreateDTO dto);
 
+    @Mapping(target = "roleName", source = "role.name")
     UserDTO toDto(User user);
 
     void updateFromDto(UserUpdateDTO dto, @MappingTarget User user);

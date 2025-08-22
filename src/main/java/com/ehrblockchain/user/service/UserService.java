@@ -16,6 +16,8 @@ import com.ehrblockchain.user.dto.UserDTO;
 import com.ehrblockchain.user.dto.UserUpdateDTO;
 import com.ehrblockchain.security.role.model.Role;
 import com.ehrblockchain.security.role.repository.RoleRepository;
+import com.ehrblockchain.patient.model.Patient;
+import com.ehrblockchain.patient.repository.PatientRepository;
 
 @Service
 public class UserService {
@@ -23,11 +25,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
+    private final PatientRepository patientRepository;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, PatientRepository patientRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
+        this.patientRepository = patientRepository;
     }
 
     @Transactional
@@ -43,8 +47,10 @@ public class UserService {
     @Transactional
     public UserDTO createUser(UserCreateDTO createDTO) {
         User user = userMapper.toEntity(createDTO);
-        Role role = roleRepository.findById(createDTO.getRoleId())
-                .orElseThrow(() -> new RuntimeException("Role not found: " + createDTO.getRoleId()));
+
+        Role role = roleRepository.findByName(createDTO.getRoleName())
+                .orElseThrow(() -> new RuntimeException("Role not found: " + createDTO.getRoleName()));
+
         user.setRole(role);
         return saveUser(user);
     }
@@ -55,6 +61,12 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         userMapper.updateFromDto(updateDTO, existingUser);
+
+        if (updateDTO.getPatientId() != null) {
+            Patient patient = patientRepository.findById(updateDTO.getPatientId())
+                    .orElseThrow(() -> new RuntimeException("Patient not found: " + updateDTO.getPatientId()));
+            existingUser.setPatient(patient);
+        }
 
         return userMapper.toDto(existingUser);
     }
