@@ -2,6 +2,7 @@ package com.ehrblockchain.user.model;
 
 import java.time.LocalDateTime;
 
+import com.ehrblockchain.user.role.Role;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.Email;

@@ -48,7 +48,6 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         userMapper.updateFromDto(updateDTO, existingUser);
-        userMapper.updateNestedEntitiesFromDto(updateDTO, existingUser);
 
         return userMapper.toDto(existingUser);
     }
