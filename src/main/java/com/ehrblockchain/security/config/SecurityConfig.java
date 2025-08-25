@@ -35,9 +35,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http     // temporary config since there's no frontend yet
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/register", "/auth/login"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/register", "/auth/login", "/auth/logout"))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login", "/auth/logout").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

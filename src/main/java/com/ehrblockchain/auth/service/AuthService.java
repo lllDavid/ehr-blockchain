@@ -17,6 +17,8 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 
 import com.ehrblockchain.user.dto.UserDTO;
 import com.ehrblockchain.user.service.UserService;
+import com.ehrblockchain.auth.dto.LoginRequestDTO;
+import com.ehrblockchain.auth.dto.LoginResponseDTO;
 
 @Service
 public class AuthService {
@@ -30,7 +32,7 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public LoginResponse authenticate(LoginRequest req, HttpServletRequest request, HttpServletResponse response) {
+    public LoginResponseDTO authenticate(LoginRequestDTO req, HttpServletRequest request, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword());
 
@@ -44,7 +46,7 @@ public class AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return new LoginResponse(authentication.getName(), roles);
+        return new LoginResponseDTO(authentication.getName(), roles);
     }
 
     public void logout(HttpServletRequest request) {

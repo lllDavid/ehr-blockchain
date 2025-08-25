@@ -12,6 +12,8 @@ import com.ehrblockchain.user.dto.UserCreateDTO;
 import com.ehrblockchain.user.dto.UserDTO;
 import com.ehrblockchain.user.service.UserService;
 import com.ehrblockchain.auth.service.AuthService;
+import com.ehrblockchain.auth.dto.LoginRequestDTO;
+import com.ehrblockchain.auth.dto.LoginResponseDTO;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,10 +35,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest,
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest,
                                                HttpServletRequest request,
                                                HttpServletResponse response) {
-        LoginResponse loginResponse = authService.authenticate(loginRequest, request, response);
+        LoginResponseDTO loginResponse = authService.authenticate(loginRequest, request, response);
         return ResponseEntity.ok(loginResponse);
     }
 
