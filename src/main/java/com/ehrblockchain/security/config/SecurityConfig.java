@@ -4,18 +4,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import com.ehrblockchain.user.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -34,17 +34,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
+        http     // temporary config since there's no frontend yet
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/auth/register", "/auth/login"))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults())
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutUrl("/auth/logout")
                         .invalidateHttpSession(true)
+                        .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 );
 
@@ -52,14 +51,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
         InMemoryUserDetailsManager uds = new InMemoryUserDetailsManager();
         uds.createUser(User.withUsername(username)
                 .password(passwordEncoder().encode(password))
                 .roles(role)
                 .build()
         );
-        return uds;
+
+        return usernameInput -> {
+            try {
+                return userRepository.findByEmail(usernameInput)
+                        .map(user -> User.withUsername(user.getEmail())
+                                .password(user.getPassword())
+                                .roles(user.getRole().getName().name())
+                                .build())
+                        .orElseThrow(() -> new UsernameNotFoundException(usernameInput));
+            } catch (UsernameNotFoundException e) {
+                return uds.loadUserByUsername(usernameInput);
+            }
+        };
     }
 
     @Bean

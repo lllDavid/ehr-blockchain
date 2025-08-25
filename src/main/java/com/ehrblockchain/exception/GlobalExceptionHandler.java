@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         ex.getConstraintViolations().forEach(violation ->
                 errors.put(violation.getPropertyPath().toString(), violation.getMessage())
         );
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -37,13 +37,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<String> handleRoleNotFound(RoleNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<String> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(PatientAlreadyAssignedException.class)
+    public ResponseEntity<String> handlePatientAlreadyAssigned(PatientAlreadyAssignedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleJsonParseError(HttpMessageNotReadableException ex) {
-        return ResponseEntity.badRequest().body("Invalid request payload");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request payload");
     }
 }

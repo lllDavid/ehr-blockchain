@@ -28,9 +28,13 @@ import com.ehrblockchain.exception.EmailAlreadyExistsException;
 import com.ehrblockchain.exception.UserNotFoundException;
 import com.ehrblockchain.fixtures.fixtures;
 import com.ehrblockchain.user.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Mock
     private UserRepository userRepository;
@@ -48,7 +52,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new UserService(userRepository, userMapper, roleRepository, patientRepository);
+        underTest = new UserService(passwordEncoder, userRepository, userMapper, roleRepository, patientRepository);
     }
 
     @Test

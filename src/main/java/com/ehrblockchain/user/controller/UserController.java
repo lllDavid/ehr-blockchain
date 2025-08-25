@@ -2,12 +2,12 @@ package com.ehrblockchain.user.controller;
 
 import java.util.List;
 
-import com.ehrblockchain.security.role.RoleEnum;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.ehrblockchain.security.role.RoleEnum;
 import com.ehrblockchain.user.service.UserService;
 import com.ehrblockchain.user.dto.UserCreateDTO;
 import com.ehrblockchain.user.dto.UserUpdateDTO;
@@ -29,7 +29,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         UserDTO user = userService.getUserById(id);
@@ -50,7 +50,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUserDTO);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id,
                                               @RequestBody UserUpdateDTO updateDTO) {
@@ -58,7 +58,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUserDto);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
