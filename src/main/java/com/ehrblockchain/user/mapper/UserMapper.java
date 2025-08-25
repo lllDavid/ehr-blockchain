@@ -20,9 +20,4 @@ public interface UserMapper {
 
     void updateFromDto(UserUpdateDTO dto, @MappingTarget User user);
 
-    @AfterMapping
-    default void linkPatient(UserUpdateDTO dto, @MappingTarget User user) {
-        if (dto.getPatientId() != null) {
-        }
-    }
 }

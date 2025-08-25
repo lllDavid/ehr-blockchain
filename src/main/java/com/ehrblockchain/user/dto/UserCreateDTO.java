@@ -1,6 +1,5 @@
 package com.ehrblockchain.user.dto;
 
-import com.ehrblockchain.security.role.RoleEnum;
 
 public class UserCreateDTO {
 
@@ -8,7 +7,6 @@ public class UserCreateDTO {
     private String lastName;
     private String email;
     private String password;
-    private RoleEnum roleName;
 
     public String getFirstName() {
         return firstName;
@@ -40,13 +38,5 @@ public class UserCreateDTO {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public RoleEnum getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(RoleEnum roleName) {
-        this.roleName = roleName;
     }
 }

@@ -9,7 +9,6 @@ public class UserUpdateDTO {
     private String lastName;
     private String password;
     private String email;
-    private Long patientId;
 
     public String getFirstName() {
         return firstName;
@@ -41,13 +40,5 @@ public class UserUpdateDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Long getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
     }
 }

@@ -261,7 +261,6 @@ public class fixtures {
         dto.setLastName("Doe");
         dto.setEmail("john.doe@example.com");
         dto.setPassword(DEFAULT_USER_PASSWORD);
-        dto.setRoleName(DEFAULT_ROLE);
         return dto;
     }
 
@@ -271,7 +270,6 @@ public class fixtures {
         dto.setLastName("UpdatedLastName");
         dto.setEmail("updated@example.com");
         dto.setPassword("newpassword123");
-        dto.setPatientId(1L);
         return dto;
     }
 }

@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static com.ehrblockchain.fixtures.fixtures.DEFAULT_ROLE;
 
 import com.ehrblockchain.user.mapper.UserMapper;
 import com.ehrblockchain.user.dto.UserDTO;
@@ -23,14 +24,19 @@ import com.ehrblockchain.user.model.User;
 import com.ehrblockchain.user.repository.UserRepository;
 import com.ehrblockchain.security.role.model.Role;
 import com.ehrblockchain.security.role.repository.RoleRepository;
-import com.ehrblockchain.patient.repository.PatientRepository;
 import com.ehrblockchain.exception.EmailAlreadyExistsException;
 import com.ehrblockchain.exception.UserNotFoundException;
+import com.ehrblockchain.security.role.RoleEnum;
 import com.ehrblockchain.fixtures.fixtures;
 import com.ehrblockchain.user.service.UserService;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Mock
     private UserRepository userRepository;
@@ -41,14 +47,11 @@ class UserServiceTest {
     @Mock
     private RoleRepository roleRepository;
 
-    @Mock
-    private PatientRepository patientRepository;
-
     private UserService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new UserService(userRepository, userMapper, roleRepository, patientRepository);
+        underTest = new UserService(passwordEncoder, userRepository, userMapper, roleRepository);
     }
 
     @Test
@@ -78,7 +81,7 @@ class UserServiceTest {
         Role role = fixtures.createDefaultRole();
 
         when(userMapper.toEntity(createDTO)).thenReturn(user);
-        when(roleRepository.findByName(createDTO.getRoleName())).thenReturn(Optional.of(role));
+        when(roleRepository.findByName(DEFAULT_ROLE)).thenReturn(Optional.of(role));
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toDto(user)).thenReturn(userDTO);
@@ -89,11 +92,12 @@ class UserServiceTest {
         assertThat(result).usingRecursiveComparison().isEqualTo(userDTO);
 
         verify(userMapper).toEntity(createDTO);
-        verify(roleRepository).findByName(createDTO.getRoleName());
+        verify(roleRepository).findByName(DEFAULT_ROLE);
         verify(userRepository).findByEmail(user.getEmail());
         verify(userRepository).save(user);
         verify(userMapper).toDto(user);
     }
+
 
     @Test
     void shouldUpdateUser() {
@@ -110,7 +114,6 @@ class UserServiceTest {
             return null;
         }).when(userMapper).updateFromDto(updateDTO, existingUser);
 
-        when(patientRepository.findById(anyLong())).thenReturn(Optional.of(fixtures.createDefaultPatient()));
         when(userMapper.toDto(existingUser)).thenReturn(updatedUserDTO);
 
         UserDTO result = underTest.updateUser(existingUser.getId(), updateDTO);
@@ -203,7 +206,9 @@ class UserServiceTest {
         UserCreateDTO createDTO = fixtures.createDefaultUserCreateDTO();
         User user = fixtures.createDefaultUser();
         Role role = fixtures.createDefaultRole();
-        when(roleRepository.findByName(createDTO.getRoleName())).thenReturn(Optional.of(role));
+        when(roleRepository.findByName(RoleEnum.valueOf(RoleEnum.PATIENT.name())))
+                .thenReturn(Optional.of(role));
+     
 
 
         when(userMapper.toEntity(createDTO)).thenReturn(user);
@@ -293,5 +298,4 @@ class UserServiceTest {
         verify(userRepository).findByEmail(email);
         verify(userMapper, never()).toDto(any());
     }
-
 }
