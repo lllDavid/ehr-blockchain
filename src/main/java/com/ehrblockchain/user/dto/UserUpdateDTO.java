@@ -2,13 +2,20 @@ package com.ehrblockchain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserUpdateDTO {
 
     private String firstName;
     private String lastName;
-    private String password;
     private String email;
+    // Temporary, implement password update method
+    @NotBlank()
+    @Size(min = 12, max = 255)
+    private String password;
+
 
     public String getFirstName() {
         return firstName;

@@ -1,5 +1,7 @@
 package com.ehrblockchain.auth.controller;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@RequestBody UserCreateDTO userCreateDTO) {
+    public ResponseEntity<UserDTO> register(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         UserDTO savedUserDTO = userService.createUser(userCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUserDTO);
     }

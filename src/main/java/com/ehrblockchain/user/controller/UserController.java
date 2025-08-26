@@ -2,6 +2,8 @@ package com.ehrblockchain.user.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -37,7 +39,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
+        System.out.println("Controller called with password: " + userCreateDTO.getPassword());
         UserDTO savedUserDTO = userService.createUser(userCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUserDTO);
     }
@@ -45,7 +48,7 @@ public class UserController {
     @PostMapping("/elevated")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> createElevatedUser(
-            @RequestBody UserCreateDTO createDTO,
+            @Valid @RequestBody UserCreateDTO createDTO,
             @RequestParam RoleEnum role) {
 
         UserDTO createdUser = userService.createElevatedUser(createDTO, role);
@@ -55,7 +58,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id,
-                                              @RequestBody UserUpdateDTO updateDTO) {
+                                              @Valid @RequestBody UserUpdateDTO updateDTO) {
         UserDTO updatedUserDto = userService.updateUser(id, updateDTO);
         return ResponseEntity.ok(updatedUserDto);
     }

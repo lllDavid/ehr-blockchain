@@ -53,8 +53,6 @@ public class UserService {
                 .orElseThrow(() -> new RoleNotFoundException("PATIENT"));
         user.setRole(role);
 
-        user.setRole(role);
-
         return saveUser(user);
     }
 

@@ -1,11 +1,15 @@
 package com.ehrblockchain.user.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class UserCreateDTO {
 
     private String firstName;
     private String lastName;
     private String email;
+    @NotBlank()
+    @Size(min = 12, max = 255)
     private String password;
 
     public String getFirstName() {
