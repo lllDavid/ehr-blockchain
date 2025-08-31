@@ -56,6 +56,16 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/patient")
+    public ResponseEntity<UserDTO> linkUserToPatient(
+            @PathVariable Long id,
+            @RequestParam Long patientId) {
+
+        UserDTO updatedUser = userService.linkPatient(id, patientId);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id,
                                               @Valid @RequestBody UserUpdateDTO updateDTO) {

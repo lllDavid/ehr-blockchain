@@ -3,6 +3,7 @@ package com.ehrblockchain.user.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +18,27 @@ import com.ehrblockchain.security.role.model.Role;
 import com.ehrblockchain.security.role.repository.RoleRepository;
 import com.ehrblockchain.exception.*;
 import com.ehrblockchain.security.role.RoleEnum;
+import com.ehrblockchain.patient.model.Patient;
+import com.ehrblockchain.patient.repository.PatientRepository;
 
 @Service
 public class UserService {
+
+    @Value("${app.default.user.role}")
+    private String defaultUserRole;
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
+    private final PatientRepository patientRepository;
 
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, PatientRepository patientRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
+        this.patientRepository = patientRepository;
     }
 
     @Transactional
@@ -49,8 +57,8 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(createDTO.getPassword()));
 
-        Role role = roleRepository.findByName(RoleEnum.PATIENT)
-                .orElseThrow(() -> new RoleNotFoundException("PATIENT"));
+        Role role = roleRepository.findByName(RoleEnum.valueOf(defaultUserRole))
+                .orElseThrow(() -> new RoleNotFoundException(defaultUserRole));
         user.setRole(role);
 
         return saveUser(user);
@@ -67,6 +75,20 @@ public class UserService {
         user.setRole(role);
 
         return saveUser(user);
+    }
+
+    @Transactional
+    // The patient to link is passed as a query parameter (?patientId=1)
+    public UserDTO linkPatient(Long userId, Long patientId) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new PatientNotFoundException(patientId));
+
+        existingUser.setPatient(patient);
+
+        return userMapper.toDto(existingUser);
     }
 
     @Transactional

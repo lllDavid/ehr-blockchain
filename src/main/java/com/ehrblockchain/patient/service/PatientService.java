@@ -14,6 +14,7 @@ import com.ehrblockchain.patient.repository.PatientRepository;
 import com.ehrblockchain.patient.dto.PatientCreateDTO;
 import com.ehrblockchain.patient.dto.PatientDTO;
 import com.ehrblockchain.patient.dto.PatientUpdateDTO;
+import com.ehrblockchain.healthrecord.model.HealthRecord;
 
 @Service
 public class PatientService {
@@ -39,6 +40,11 @@ public class PatientService {
     @Transactional
     public PatientDTO createPatient(PatientCreateDTO createDTO) {
         Patient patient = patientMapper.toEntity(createDTO);
+
+        if (createDTO.getHealthRecord() == null) {
+            HealthRecord hr = new HealthRecord();
+            patient.setHealthRecord(hr);
+        }
 
         return savePatient(patient);
     }

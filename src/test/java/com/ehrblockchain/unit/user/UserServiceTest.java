@@ -7,15 +7,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 import static com.ehrblockchain.fixtures.fixtures.DEFAULT_ROLE;
 
+import com.ehrblockchain.patient.repository.PatientRepository;
 import com.ehrblockchain.user.mapper.UserMapper;
 import com.ehrblockchain.user.dto.UserDTO;
 import com.ehrblockchain.user.dto.UserCreateDTO;
@@ -31,6 +34,7 @@ import com.ehrblockchain.fixtures.fixtures;
 import com.ehrblockchain.user.service.UserService;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -47,11 +51,16 @@ class UserServiceTest {
     @Mock
     private RoleRepository roleRepository;
 
+    @Mock
+    PatientRepository patientRepository;
+
     private UserService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new UserService(passwordEncoder, userRepository, userMapper, roleRepository);
+        underTest = new UserService(passwordEncoder, userRepository, userMapper, roleRepository, patientRepository);
+        lenient().when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        ReflectionTestUtils.setField(underTest, "defaultUserRole", "PATIENT");
     }
 
     @Test
@@ -206,9 +215,8 @@ class UserServiceTest {
         UserCreateDTO createDTO = fixtures.createDefaultUserCreateDTO();
         User user = fixtures.createDefaultUser();
         Role role = fixtures.createDefaultRole();
-        when(roleRepository.findByName(RoleEnum.valueOf(RoleEnum.PATIENT.name())))
+        when(roleRepository.findByName(RoleEnum.PATIENT))
                 .thenReturn(Optional.of(role));
-     
 
 
         when(userMapper.toEntity(createDTO)).thenReturn(user);

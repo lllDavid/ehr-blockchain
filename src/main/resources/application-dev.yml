@@ -16,6 +16,9 @@ app:
       jwt:
         base64-secret: ${JWT_SECRET}
         token-validity-in-seconds: ${JWT_TOKEN_VALIDITY}
+  default:
+    user:
+      role: ADMIN
 
 springdoc:
   api-docs:

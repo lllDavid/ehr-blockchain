@@ -16,6 +16,7 @@ public interface UserMapper {
     User toEntity(UserCreateDTO dto);
 
     @Mapping(target = "roleName", source = "role.name")
+    @Mapping(target = "patientId", source = "patient.id")
     UserDTO toDto(User user);
 
     void updateFromDto(UserUpdateDTO dto, @MappingTarget User user);

@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.ehrblockchain.healthrecord.model.HealthRecord;
 import com.ehrblockchain.user.model.User;
+import com.ehrblockchain.security.encryption.ColumnEncryptionConverter;
 
 @Entity
 @Table(name = "patients",
@@ -38,20 +39,23 @@ public class Patient {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Size(max = 50)
+    @Size(max = 100)
     @Column(name = "first_name")
+    @Convert(converter = ColumnEncryptionConverter.class)
     private String firstName;
 
-    @Size(max = 50)
+    @Size(max = 100)
     @Column(name = "last_name")
+    @Convert(converter = ColumnEncryptionConverter.class)
     private String lastName;
 
     @Past
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Size(max = 20)
+    @Size(max = 100)
     @Column(name = "gender")
+    @Convert(converter = ColumnEncryptionConverter.class)
     private String gender;
 
     @Min(0)
@@ -67,11 +71,13 @@ public class Patient {
     // Matches one of the blood types A, B, AB, or O followed by either a - or +
     @Pattern(regexp = "^(A|B|AB|O)[-+]$")
     @Column(name = "blood_type")
+    @Convert(converter = ColumnEncryptionConverter.class)
     private String bloodType;
 
     // Matches a phone number of 7–15 digits, optionally starting with a +
     @Pattern(regexp = "\\+?[0-9]{7,15}")
     @Column(name = "phone_number")
+    @Convert(converter = ColumnEncryptionConverter.class)
     private String phoneNumber;
 
     @Email
@@ -79,8 +85,9 @@ public class Patient {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Size(max = 50)
+    @Size(max = 100)
     @Column(name = "emergency_contact")
+    @Convert(converter = ColumnEncryptionConverter.class)
     private String emergencyContact;
 
     @Embedded

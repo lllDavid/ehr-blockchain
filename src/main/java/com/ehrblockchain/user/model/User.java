@@ -44,12 +44,12 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Size(max = 50)
+    @Size(max = 100)
     @NotBlank
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Size(max = 50)
+    @Size(max = 100)
     @NotBlank
     @Column(name = "last_name", nullable = false)
     private String lastName;

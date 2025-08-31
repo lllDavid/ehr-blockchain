@@ -14,3 +14,4 @@ target/
 # Miscellaneous
 notes.md
 .env
+aead_keyset.json

@@ -4,5 +4,6 @@ public record UserDTO(
         String firstName,
         String lastName,
         String email,
-        String roleName
+        String roleName,
+        Long patientId
 ) {}
