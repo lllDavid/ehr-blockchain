@@ -177,6 +177,7 @@ public class fixtures {
     public static PatientDTO createDefaultPatientDTO() {
         Patient patient = createDefaultPatient();
         return new PatientDTO(
+                patient.getId(),
                 patient.getFirstName(),
                 patient.getLastName(),
                 patient.getDateOfBirth(),
