@@ -18,7 +18,7 @@ import com.ehrblockchain.healthrecord.model.HealthRecord;
 import com.ehrblockchain.patient.dto.*;
 import com.ehrblockchain.patient.model.*;
 
-public class fixtures {
+public class UnitFixtures {
 
     public static final String DEFAULT_FIRST_NAME = "John";
     public static final String DEFAULT_LAST_NAME = "Doe";

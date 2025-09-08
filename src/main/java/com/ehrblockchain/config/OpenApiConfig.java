@@ -81,6 +81,15 @@ public class OpenApiConfig {
                     }
                     """, "usersCreateElevatedExample");
 
+            setDescription(openApi, "/chain",
+                    "The chain's max transactions per block is 3 for development. After 3 transactions (via GET, PATCH or DELETE requests) on a health record, a block is created.");
+
+            setPostDescription(openApi, "/users",
+                    "For development every user is created with role ADMIN. Role is determined by the active profile in resources/application.yml:");
+
+            setDescription(openApi, "/auth/register",
+                    "For development every user is created with role ADMIN. Role is determined by the active profile in resources/application.yml:");
+
             addExample(openApi, "/patients", """
                     {
                       "recordDate": "2025-08-28",
@@ -188,21 +197,43 @@ public class OpenApiConfig {
         };
     }
 
-    private void addExample(OpenAPI openApi, String path, String jsonExample, String exampleName) {
-        if (openApi.getPaths() == null) return;
+    public void addExample(OpenAPI api, String path, String json, String name) {
+        if (api.getPaths() == null) return;
+        PathItem p = api.getPaths().get(path);
+        if (p == null) return;
 
-        PathItem pathItem = openApi.getPaths().get(path);
-        if (pathItem == null) return;
+        Operation get = p.getGet();
+        if (get != null && get.getResponses() != null)
+            get.getResponses().forEach((s, r) -> {
+                if (r.getContent() == null) r.setContent(new Content());
+                r.getContent().computeIfAbsent("application/json", k -> new io.swagger.v3.oas.models.media.MediaType())
+                        .addExamples(name, new Example().value(json));
+            });
 
-        for (Operation op : new Operation[]{pathItem.getPost(), pathItem.getPut(), pathItem.getPatch()}) {
+        for (Operation op : new Operation[]{p.getPost(), p.getPut(), p.getPatch()})
             if (op != null && op.getRequestBody() != null) {
-                Content content = op.getRequestBody().getContent();
-                if (content != null && content.get("application/json") != null) {
-                    content.get("application/json")
-                            .addExamples(exampleName, new Example().value(jsonExample));
-                }
+                Content c = op.getRequestBody().getContent();
+                if (c != null && c.get("application/json") != null)
+                    c.get("application/json").addExamples(name, new Example().value(json));
             }
+    }
+
+    public void setDescription(OpenAPI api, String path, String desc) {
+        if (api.getPaths() == null) return;
+        PathItem p = api.getPaths().get(path);
+        if (p == null) return;
+
+        for (Operation op : new Operation[]{p.getGet(), p.getPost(), p.getPut(), p.getPatch()}) {
+            if (op != null) op.setDescription(desc);
         }
     }
 
+    public void setPostDescription(OpenAPI api, String path, String desc) {
+        if (api.getPaths() == null) return;
+        PathItem p = api.getPaths().get(path);
+        if (p == null) return;
+
+        Operation post = p.getPost();
+        if (post != null) post.setDescription(desc);
+    }
 }
